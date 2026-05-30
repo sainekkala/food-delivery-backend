@@ -1,0 +1,72 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: notification-service
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/food_delivery?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:  ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+       smtp: 
+        auth: true
+        starttls:
+         enable: true
+
+
+
+    
+  
+
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group-v3
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.foodservice.notification_service.dto.OrderEvent
+    listener:
+      ack-mode: manual
+      concurrency: 3
+  
+
+  
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+twilio: 
+  account: 
+     sid: ${TWILIO_ACCOUNT_SID}
+
+  auth:
+   token: ${TWILIO_AUTH_TOKEN}
+
+  phone:
+    number: ${TWILIO_PHONE_NUMBER}
+
+
